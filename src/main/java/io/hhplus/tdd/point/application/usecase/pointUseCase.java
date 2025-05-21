@@ -25,8 +25,8 @@ public class pointUseCase {
         UserPoint userPoint = userPointService.charge(id, amount);
 
         // 이력 저장
-        pointHistoryService.saveHistory(PointMapper.toEntity(
-                userPoint.getId(), amount, TransactionType.CHARGE, userPoint.getUpdateMillis()));
+        pointHistoryService.saveHistory(
+                PointMapper.toEntity(userPoint.getId(), amount, TransactionType.CHARGE, userPoint.getUpdateMillis()));
 
         return PointMapper.toDto(userPoint);
     }
@@ -34,8 +34,16 @@ public class pointUseCase {
     /**
      * 사용자의 포인트 사용
      */
-//    public UserPointResponse usePoint(long id, long amount) {
-//
-//        return PointMapper.toDto(userPointService.use(id, amount));
-//    }
+    public UserPointResponse usePoint(long id, long amount) {
+
+        // 포인트 사용
+        UserPoint userPoint = userPointService.use(id, amount);
+
+        // 이력 저장
+        pointHistoryService.saveHistory(
+                PointMapper.toEntity(userPoint.getId(), amount, TransactionType.USE, userPoint.getUpdateMillis())
+        );
+
+        return PointMapper.toDto(userPoint);
+    }
 }

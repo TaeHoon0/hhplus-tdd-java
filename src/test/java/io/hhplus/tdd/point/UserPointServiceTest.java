@@ -73,4 +73,49 @@ public class UserPointServiceTest {
         // then
         verify(userPointRepository, never()).insertOrUpdate(id, amount);
     }
+
+    @Test
+    public void 사용_금액이_보유_포인트를_초과하지_않을_때_성공() {
+
+        //given
+        long id = 1L;
+        long amount = 100L;
+
+        UserPoint before = new UserPoint(id, 100L, System.currentTimeMillis());
+        UserPoint after = new UserPoint(id, 0L, System.currentTimeMillis());
+
+        when(userPointRepository.selectById(id)).thenReturn(before);
+        when(userPointRepository.insertOrUpdate(id, 0L)).thenReturn(after);
+
+        //when
+        userPointService.use(id, amount);
+
+        //then
+        verify(pointPolicy, Mockito.times(1)).validateMinBalance(100L, 100L);
+        verify(userPointRepository, Mockito.times(1)).selectById(id);
+        verify(userPointRepository, Mockito.times(1)).insertOrUpdate(id, 0L);
+    }
+
+    @Test
+    public void 사용_금액이_보유_포인트를_초과하여_실패() {
+
+        //given
+        long id = 1L;
+        long amount = 1_000_000L;
+
+        UserPoint before = new UserPoint(id, 100L, System.currentTimeMillis());
+
+        when(userPointRepository.selectById(id)).thenReturn(before);
+
+        doThrow(new IllegalArgumentException("보유 포인트가 사용하려는 포인트보다 적습니다."))
+                .when(pointPolicy).validateMinBalance(before.getPoint(), amount);
+
+        //when
+        assertThrows(IllegalArgumentException.class, () -> {
+            userPointService.use(id, amount);
+        });
+
+        //then
+        verify(userPointRepository, never()).insertOrUpdate(id, amount);
+    }
 }

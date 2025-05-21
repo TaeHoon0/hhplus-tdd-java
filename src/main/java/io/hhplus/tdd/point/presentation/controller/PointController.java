@@ -67,9 +67,9 @@ public class PointController {
             @RequestBody @Valid UserPointRequest request
     ) {
 
-        //UserPointResponse response = pointUseCase.usePoint(id, request.getAmount());
+        UserPointResponse response = pointUseCase.usePoint(id, request.getAmount());
 
         return ResponseEntity.ok()
-                .body(null  );
+                .body(response);
     }
 }

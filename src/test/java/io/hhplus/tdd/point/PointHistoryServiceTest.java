@@ -44,4 +44,27 @@ public class PointHistoryServiceTest {
         // then
         verify(pointHistoryRepository, times(1)).insert(userId, amount, type, updateMillis);
     }
+
+    @Test
+    public void 포인트_사용_이력_저장() {
+
+        // given
+        long userId = 1L;
+        long amount = 100L;
+        TransactionType type = TransactionType.USE;
+        long updateMillis = System.currentTimeMillis();
+
+        PointHistory pointHistory = PointHistory.builder()
+                .userId(userId)
+                .amount(amount)
+                .type(type)
+                .updateMillis(updateMillis)
+                .build();
+
+        // when
+        pointHistoryService.saveHistory(pointHistory);
+
+        // then
+        verify(pointHistoryRepository, times(1)).insert(userId, amount, type, updateMillis);
+    }
 }

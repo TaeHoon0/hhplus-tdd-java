@@ -25,4 +25,15 @@ public class UserPointService {
 
         return userPointRepository.insertOrUpdate(id, userPoint.getPoint());
     }
+
+    public UserPoint use(long id, long amount) {
+
+        UserPoint userPoint = userPointRepository.selectById(id);
+
+        pointPolicy.validateMinBalance(userPoint.getPoint(), amount);
+
+        userPoint.use(amount);
+
+        return userPointRepository.insertOrUpdate(id, userPoint.getPoint());
+    }
 }

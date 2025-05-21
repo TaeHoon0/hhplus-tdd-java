@@ -20,4 +20,10 @@ public class UserPoint {
         this.point += amount;
         this.updateMillis = System.currentTimeMillis();
     }
+
+    public void use(long amount) {
+
+        this.point -= amount;
+        this.updateMillis = System.currentTimeMillis();
+    }
 }
