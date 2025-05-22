@@ -20,7 +20,7 @@ public class PointPolicy {
     }
 
     public void validateMinBalance(long currentPoint, long amount) {
-        System.out.println(currentPoint + "  /  " + amount);
+
         if (currentPoint - amount < minBalance) {
             throw new IllegalArgumentException("보유 포인트가 사용하려는 포인트보다 적습니다.");
         }

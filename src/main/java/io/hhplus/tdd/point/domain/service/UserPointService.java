@@ -36,4 +36,9 @@ public class UserPointService {
 
         return userPointRepository.insertOrUpdate(id, userPoint.getPoint());
     }
+
+    public UserPoint get(long id) {
+
+        return userPointRepository.selectById(id);
+    }
 }

@@ -11,8 +11,7 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -117,5 +116,23 @@ public class UserPointServiceTest {
 
         //then
         verify(userPointRepository, never()).insertOrUpdate(id, amount);
+    }
+
+    @Test
+    public void 사용자의_보유_포인트를_조회() {
+
+        //given
+        long id = 1L;
+        UserPoint userPoint = new UserPoint(id, 100L, System.currentTimeMillis());
+
+        when(userPointRepository.selectById(id)).thenReturn(userPoint);
+
+        //when
+        UserPoint result = userPointService.get(id);
+
+        //then
+        assertNotNull(result);
+        assertEquals(id, result.getId());
+        assertEquals(100L, result.getPoint());
     }
 }

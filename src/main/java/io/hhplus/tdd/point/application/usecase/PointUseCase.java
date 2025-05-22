@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
-public class pointUseCase {
+public class PointUseCase {
 
     private final UserPointService userPointService;
     private final PointHistoryService pointHistoryService;
@@ -43,6 +43,17 @@ public class pointUseCase {
         pointHistoryService.saveHistory(
                 PointMapper.toEntity(userPoint.getId(), amount, TransactionType.USE, userPoint.getUpdateMillis())
         );
+
+        return PointMapper.toDto(userPoint);
+    }
+
+    /**
+     * 사용자의 포인트 조회
+     */
+    public UserPointResponse getPoint(long id) {
+
+        // 포인트 조회
+        UserPoint userPoint = userPointService.get(id);
 
         return PointMapper.toDto(userPoint);
     }
