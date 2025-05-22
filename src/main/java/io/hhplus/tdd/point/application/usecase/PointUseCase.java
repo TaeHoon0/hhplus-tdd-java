@@ -6,6 +6,7 @@ import io.hhplus.tdd.point.domain.entity.PointHistory;
 import io.hhplus.tdd.point.domain.entity.UserPoint;
 import io.hhplus.tdd.point.domain.service.PointHistoryService;
 import io.hhplus.tdd.point.domain.service.UserPointService;
+import io.hhplus.tdd.point.infrastructure.lock.LockManager;
 import io.hhplus.tdd.point.presentation.dto.response.PointHistoryResponse;
 import io.hhplus.tdd.point.presentation.dto.response.UserPointResponse;
 import lombok.RequiredArgsConstructor;
@@ -19,14 +20,27 @@ public class PointUseCase {
 
     private final UserPointService userPointService;
     private final PointHistoryService pointHistoryService;
+    private final LockManager lockManager;
 
     /**
      * 사용자의 포인트 충전
      */
     public UserPointResponse chargePoint(long id, long amount) {
 
-        // 포인트 충전
-        UserPoint userPoint = userPointService.charge(id, amount);
+        UserPoint userPoint;
+
+
+        try {
+            // 락 획득 시도
+            lockManager.getLock(id);
+            // 포인트 충전
+            userPoint = userPointService.charge(id, amount);
+
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        } finally {
+            lockManager.releaseLock(id);
+        }
 
         // 이력 저장
         pointHistoryService.saveHistory(
