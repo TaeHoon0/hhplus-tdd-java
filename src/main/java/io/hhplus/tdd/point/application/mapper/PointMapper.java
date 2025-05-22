@@ -3,6 +3,7 @@ package io.hhplus.tdd.point.application.mapper;
 import io.hhplus.tdd.point.domain.TransactionType;
 import io.hhplus.tdd.point.domain.entity.PointHistory;
 import io.hhplus.tdd.point.domain.entity.UserPoint;
+import io.hhplus.tdd.point.presentation.dto.response.PointHistoryResponse;
 import io.hhplus.tdd.point.presentation.dto.response.UserPointResponse;
 
 public class PointMapper {
@@ -29,4 +30,16 @@ public class PointMapper {
                 .updateMillis(updateMillis)
                 .build();
     }
+
+    public static PointHistoryResponse toDto(PointHistory entity) {
+
+        return PointHistoryResponse.builder()
+                .id(entity.getId())
+                .userId(entity.getUserId())
+                .amount(entity.getAmount())
+                .type(entity.getType())
+                .updateMillis(entity.getUpdateMillis())
+                .build();
+    }
+
 }

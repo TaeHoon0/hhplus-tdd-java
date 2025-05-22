@@ -1,8 +1,8 @@
 package io.hhplus.tdd.point.presentation.controller;
 
-import io.hhplus.tdd.point.domain.entity.PointHistory;
 import io.hhplus.tdd.point.presentation.dto.request.UserPointRequest;
 import io.hhplus.tdd.point.application.usecase.PointUseCase;
+import io.hhplus.tdd.point.presentation.dto.response.PointHistoryResponse;
 import io.hhplus.tdd.point.presentation.dto.response.UserPointResponse;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
@@ -41,10 +41,13 @@ public class PointController {
      * TODO - 특정 유저의 포인트 충전/이용 내역을 조회하는 기능을 작성해주세요.
      */
     @GetMapping("{id}/histories")
-    public List<PointHistory> history(
+    public ResponseEntity<List<PointHistoryResponse>> history(
             @PathVariable @Min(1) long id
     ) {
-        return List.of();
+
+        List<PointHistoryResponse> response = pointUseCase.getPointHistory(id);
+
+        return ResponseEntity.ok(response);
     }
 
     /**

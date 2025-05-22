@@ -2,12 +2,16 @@ package io.hhplus.tdd.point.application.usecase;
 
 import io.hhplus.tdd.point.application.mapper.PointMapper;
 import io.hhplus.tdd.point.domain.TransactionType;
+import io.hhplus.tdd.point.domain.entity.PointHistory;
 import io.hhplus.tdd.point.domain.entity.UserPoint;
 import io.hhplus.tdd.point.domain.service.PointHistoryService;
 import io.hhplus.tdd.point.domain.service.UserPointService;
+import io.hhplus.tdd.point.presentation.dto.response.PointHistoryResponse;
 import io.hhplus.tdd.point.presentation.dto.response.UserPointResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
+
+import java.util.List;
 
 @Component
 @RequiredArgsConstructor
@@ -56,5 +60,17 @@ public class PointUseCase {
         UserPoint userPoint = userPointService.get(id);
 
         return PointMapper.toDto(userPoint);
+    }
+
+    /**
+     * 사용자의 포인트의 이력 조회
+     */
+    public List<PointHistoryResponse> getPointHistory(long id) {
+
+        List<PointHistory> pointHistories = pointHistoryService.getHistory(id);
+
+        return pointHistories.stream()
+                .map(PointMapper::toDto)
+                .toList();
     }
 }
